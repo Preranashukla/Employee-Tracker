@@ -100,7 +100,7 @@ function viewAllEmployees(){
 
 
 function addEmployee(){
-  inquirer.prompts([{
+  inquirer.prompt([{
     type: 'input',
     message: 'What is employees first name?',
     name: 'firstName'
@@ -206,7 +206,7 @@ let empArr = emp();
 let roleArr = role();
 function emp(){
 const employeesArray = [];
-   const empQuery = 'SELECT * FROM employee';
+   const empQuery = 'SELECT first_name FROM employee';
     db.query(empQuery, (err, res) => {
         if (err) throw err;
         res.forEach(({first_name}) => {
@@ -219,16 +219,18 @@ const employeesArray = [];
 
   function role(){
     const rolesArray = [];
-    const roleQuery = `SELECT title FROM employee_role`
+    const roleQuery = `SELECT id FROM employee_role`
     db.query(roleQuery, (err, res) => {
       if (err) throw err;
-      res.forEach(({title}) => {
-        rolesArray.push(title);
+      res.forEach(({id}) => {
+        rolesArray.push(id);
  });
  });
 
  return rolesArray;
 }
+
+console.log(roleArr);
 
 function updateEmployee(){
   inquirer.prompt([
@@ -245,11 +247,7 @@ function updateEmployee(){
       name: 'newRole'
     }
   ]).then((answers)=>{
-    db.query(`UPDATE employee_role SET title = ? WHERE first_name = ?`,
-    {
-      title: answers.newRole,
-      first_name: answers.roleUpdate
-    },
+    db.query(`UPDATE employee SET role_id = ${answers.newRole} WHERE first_name = '${answers.roleUpdate}'`,
     (err) => {
      if (err) throw err;
      console.log('Updated Employee Role')
@@ -257,7 +255,7 @@ function updateEmployee(){
      finalDisplay()
     })
    
-  })
+  });
 
 };
 
@@ -265,7 +263,7 @@ finalDisplay();
 
 function quit(){
   console.log ("Thank you for using this app good bye");
-  return
+  process.exit()
 }
 
 
