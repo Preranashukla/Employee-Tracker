@@ -66,6 +66,10 @@ function finalDisplay(){
       updateEmployee();
       break;
 
+      case 'Quit' :
+      quit();
+      break;
+
   }})
 };
 
@@ -149,14 +153,14 @@ function addDepartment(){
       }
   }])  
   .then((answer) => {
-    db.query(`INSERT INTO employee_Dept SET ?`,
+    db.query(`INSERT INTO department SET ?`,
     {
       department_name: answer.name
     },
     (err) => {
       if (err) throw err;
       console.log('Added new Department')
-      console.table(answers)
+      console.table(answer)
       finalDisplay()
     })
   })
@@ -181,7 +185,7 @@ function addRole(){
             message: 'What is the department code?'
         }])
         .then((answer)=> {
-          db.query(`INSERT INTO employee_Role SET ?`,
+          db.query(`INSERT INTO employee_role SET ?`,
           {
             title: answer.addRole,
             salary: answer.salary,
@@ -215,7 +219,7 @@ const employeesArray = [];
 
   function role(){
     const rolesArray = [];
-    const roleQuery = `SELECT title FROM employee_Role`
+    const roleQuery = `SELECT title FROM employee_role`
     db.query(roleQuery, (err, res) => {
       if (err) throw err;
       res.forEach(({title}) => {
@@ -241,7 +245,7 @@ function updateEmployee(){
       name: 'newRole'
     }
   ]).then((answers)=>{
-    db.query(`UPDATE employee_Role SET title = ? WHERE first_name = ?`,
+    db.query(`UPDATE employee_role SET title = ? WHERE first_name = ?`,
     {
       title: answers.newRole,
       first_name: answers.roleUpdate
@@ -256,6 +260,14 @@ function updateEmployee(){
   })
 
 };
+
+finalDisplay();
+
+function quit(){
+  console.log ("Thank you for using this app good bye");
+  return
+}
+
 
 // Default response for any other request (Not Found)
 app.use((req, res) => {
